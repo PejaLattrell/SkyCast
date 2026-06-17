@@ -8,6 +8,7 @@ Startup sequence:
 """
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -66,14 +67,15 @@ app = FastAPI(
 )
 
 # ── CORS ──────────────────────────────────────────────────────
-# Allow Vite dev server + any localhost port during development.
+# Read allowed origins from CORS_ORIGINS env var (comma-separated).
+# Falls back to localhost ports for local development.
+_default_origins = "http://localhost:5173,http://localhost:4173,http://127.0.0.1:5173"
+_cors_env = os.getenv("CORS_ORIGINS", _default_origins)
+_allowed_origins = [o.strip() for o in _cors_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Vite default
-        "http://localhost:4173",  # Vite preview
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

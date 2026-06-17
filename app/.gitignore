@@ -25,5 +25,6 @@ dist-ssr
 *.sw?
 
 #environment variables
-.env.production
+# Note: .env.production is intentionally tracked — it only contains the public
+# backend URL (VITE_API_BASE_URL), which is safe to commit (not a secret).
 
