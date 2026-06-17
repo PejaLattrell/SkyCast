@@ -4,13 +4,21 @@ import TemperatureDisplay from '@/components/TemperatureDisplay';
 import { useWeatherStore } from '@/store/useWeatherStore';
 import { conditionGradients } from '@/data/weatherData';
 
+function uvLabel(uv: number): string {
+  if (uv <= 2) return 'Low';
+  if (uv <= 5) return 'Moderate';
+  if (uv <= 7) return 'High';
+  if (uv <= 10) return 'Very High';
+  return 'Extreme';
+}
+
 const dataCards = [
-  { label: 'Humidity', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.humidity}%`, icon: '💧' },
-  { label: 'Wind', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.windSpeed} mph ${d.current.windDirection}`, icon: '💨' },
-  { label: 'UV Index', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.uvIndex} (Moderate)`, icon: '☀️' },
-  { label: 'Visibility', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.visibility} mi`, icon: '👁' },
-  { label: 'Pressure', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.pressure} inHg`, icon: '📊' },
-  { label: 'Dew Point', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.dewPoint}°`, icon: '🌡️' },
+  { label: 'Humidity',   value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.humidity}%`,                          icon: '💧' },
+  { label: 'Wind',       value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.windSpeed} km/h ${d.current.windDirection}`, icon: '💨' },
+  { label: 'UV Index',   value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.uvIndex} (${uvLabel(d.current.uvIndex)})`,   icon: '☀️' },
+  { label: 'Visibility', value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.visibility} km`,                       icon: '👁' },
+  { label: 'Pressure',   value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.pressure} hPa`,                        icon: '📊' },
+  { label: 'Dew Point',  value: (d: typeof import('@/data/weatherData').sanFranciscoWeather) => `${d.current.dewPoint}°`,                           icon: '🌡️' },
 ];
 
 export default function CurrentConditionsPanel() {

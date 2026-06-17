@@ -2,11 +2,15 @@
  * weather-api.ts
  * ─────────────────────────────────────────────────────────────
  * All communication with the SkyCast Python backend.
- * The Vite dev proxy (vite.config.ts) rewrites "/api" → "http://localhost:8000/api",
- * so we can use relative paths here — no hardcoded localhost URL needed.
+ * In dev: Vite's proxy (vite.config.ts) rewrites "/api" → "http://localhost:8000/api".
+ * In production: VITE_API_BASE_URL (set in .env.production) is prepended to all paths.
  */
 
 import type { WeatherData } from '@/types/weather';
+
+// In dev this is "" (empty), so relative /api paths work via Vite proxy.
+// In production this is "https://skycast-api.onrender.com" (or wherever you deploy).
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 // ── Featured city shape returned by /api/weather/featured ────
 export interface FeaturedCityWeather {
@@ -22,7 +26,7 @@ export interface FeaturedCityWeather {
 // ── Helpers ───────────────────────────────────────────────────
 
 async function apiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(path);
+  const response = await fetch(`${BASE_URL}${path}`);
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: response.statusText }));
     throw new Error(error.detail ?? `API error ${response.status}`);
