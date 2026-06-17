@@ -71,7 +71,8 @@ app = FastAPI(
 # Falls back to localhost ports for local development.
 _default_origins = "http://localhost:5173,http://localhost:4173,http://127.0.0.1:5173"
 _cors_env = os.getenv("CORS_ORIGINS", _default_origins)
-_allowed_origins = [o.strip() for o in _cors_env.split(",") if o.strip()]
+_allowed_origins = [o.strip().rstrip("/") for o in _cors_env.split(",") if o.strip()]
+logger.info("CORS allowed origins: %s", _allowed_origins)
 
 app.add_middleware(
     CORSMiddleware,
