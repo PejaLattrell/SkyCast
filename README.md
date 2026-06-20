@@ -194,19 +194,25 @@ The app will be available at **http://localhost:5173**. The Vite dev proxy forwa
 
 The monorepo deploys in two independent parts.
 
+### Backend → Northflank (Docker)
+
+1. Create a new Service on [Northflank](https://northflank.com/)
+2. Choose **Repository**, select your GitHub repository, and set the root directory to `/server`.
+3. Select **Dockerfile** as the build type (Northflank will auto-detect the `server/Dockerfile`).
+4. Set the port to `8000` (HTTP).
+5. Add the required Environment Variables:
+   - `SUPABASE_URL=https://your-project.supabase.co`
+   - `SUPABASE_KEY=your-service-role-key`
+6. Deploy the service. Once live, copy the Northflank service URL (e.g., `https://skycast-server-xxx.northflank.app`).
+
 ### Frontend → Vercel
 
-1. Import repo on [vercel.com](https://vercel.com)
-2. Set **Root Directory** to `app`
-3. Add env var: `VITE_API_BASE_URL = https://your-backend.railway.app`
-4. Deploy — Vercel runs `npm run build` automatically
-
-### Backend → Railway
-
-1. Import repo on [railway.app](https://railway.app)
-2. Set **Root Directory** to `server`
-3. Set **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-4. Add the same env vars from `server/.env`
+1. Import your repository on [Vercel](https://vercel.com/)
+2. Set the **Root Directory** to `app`.
+3. Vercel will auto-detect Vite and set the correct build commands.
+4. Add the Environment Variable so the frontend knows where the backend is:
+   - `VITE_API_BASE_URL = https://skycast-server-xxx.northflank.app` (The URL you copied from Northflank)
+5. Deploy. Vercel will build and serve your static React app.
 
 ---
 

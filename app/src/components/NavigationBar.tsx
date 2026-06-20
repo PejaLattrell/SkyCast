@@ -23,22 +23,13 @@ export default function NavigationBar() {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 h-16 bg-white/15 backdrop-blur-xl border-b border-white/20">
+      <nav className="fixed top-0 left-0 right-0 z-[1050] h-16 bg-white/15 backdrop-blur-xl border-b border-white/20">
         <div className="max-w-[1200px] mx-auto px-6 h-full flex items-center justify-between">
           {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-0 cursor-pointer">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer">
+            <img src="/assets/logo.png" alt="SkyCast Logo" className="w-8 h-8 rounded-full object-cover shadow-soft" />
             <span className="text-heading-small font-medium text-charcoal tracking-tight">
-              Sky
-            </span>
-            <span className="relative text-heading-small font-medium text-charcoal tracking-tight">
-              C
-              <span
-                className="absolute -bottom-0.5 left-0 right-0 h-[2px] rounded-full bg-terracotta"
-                style={{ borderRadius: '0 0 50% 50%' }}
-              />
-            </span>
-            <span className="text-heading-small font-medium text-charcoal tracking-tight">
-              ast
+              SkyCast
             </span>
           </button>
 
@@ -68,7 +59,7 @@ export default function NavigationBar() {
       </nav>
 
       {/* Mobile Bottom Tab Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 bg-white/15 backdrop-blur-xl border-t border-white/20">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-[1050] h-16 bg-white/15 backdrop-blur-xl border-t border-white/20">
         <div className="flex items-center justify-around h-full px-4">
           {tabs.map((tab) => (
             <button
