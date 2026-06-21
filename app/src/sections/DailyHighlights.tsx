@@ -35,6 +35,7 @@ export default function DailyHighlights() {
   const { weatherData } = useWeatherStore();
   const { current, daily } = weatherData;
 
+  const isNight = current.isNight;
   const progress = sunProgress(current.sunrise, current.sunset);
   const color = aqiColor(current.aqi);
 
@@ -43,9 +44,9 @@ export default function DailyHighlights() {
   const maxPrecip = Math.max(...precipBars.map((d) => d.precipitation), 1);
 
   return (
-    <section className="bg-cream py-12 px-6">
+    <section className={`py-12 px-6 transition-colors duration-500 ${isNight ? 'bg-transparent' : 'bg-cream'}`}>
       <div className="max-w-[1200px] mx-auto">
-        <h2 className="text-heading-medium text-charcoal mb-6">Today's Highlights</h2>
+        <h2 className={`text-heading-medium mb-6 transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>Today's Highlights</h2>
 
         {/* Sunrise / Sunset */}
         <div className="glass-panel mb-6">
@@ -55,8 +56,8 @@ export default function DailyHighlights() {
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D4A03A" strokeWidth="1.5" className="mb-1">
                 <path d="M12 2v4M4.93 6.34l2.83 2.83M19.07 6.34l-2.83 2.83M6 14a6 6 0 1 1 12 0" />
               </svg>
-              <p className="text-caption text-light-gray">Sunrise</p>
-              <p className="text-heading-small text-charcoal">{current.sunrise}</p>
+              <p className={`text-caption transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>Sunrise</p>
+              <p className={`text-heading-small transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>{current.sunrise}</p>
             </div>
 
             {/* Arc */}
@@ -85,8 +86,8 @@ export default function DailyHighlights() {
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C4957A" strokeWidth="1.5" className="mb-1">
                 <path d="M12 10V6M4.93 10.66l2.83-2.83M19.07 10.66l-2.83-2.83M6 18a6 6 0 1 0 12 0" />
               </svg>
-              <p className="text-caption text-light-gray">Sunset</p>
-              <p className="text-heading-small text-charcoal">{current.sunset}</p>
+              <p className={`text-caption transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>Sunset</p>
+              <p className={`text-heading-small transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>{current.sunset}</p>
             </div>
           </div>
         </div>
@@ -96,10 +97,10 @@ export default function DailyHighlights() {
 
           {/* Air Quality */}
           <div className="glass-panel">
-            <p className="text-heading-small text-charcoal">Air Quality</p>
+            <p className={`text-heading-small transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>Air Quality</p>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="text-heading-large font-light" style={{ color }}>{current.aqi}</span>
-              <span className="text-body-regular text-warm-gray">{current.aqiLabel}</span>
+              <span className={`text-body-regular transition-colors duration-300 ${isNight ? 'text-white/70' : 'text-warm-gray'}`}>{current.aqiLabel}</span>
             </div>
             {/* European AQI scale bar: 0–100 */}
             <div
@@ -107,7 +108,7 @@ export default function DailyHighlights() {
               style={{ background: 'linear-gradient(to right, #7A9A6E, #A8C47A, #D4A03A, #C4957A, #B07070, #8B4444)' }}
             >
               <div
-                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-cream shadow-soft"
+                className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 shadow-soft transition-colors duration-300 ${isNight ? 'border-[#1A1828]' : 'border-cream'}`}
                 style={{
                   left: `${Math.min((current.aqi / 100) * 100, 97)}%`,
                   background: color,
@@ -115,22 +116,22 @@ export default function DailyHighlights() {
               />
             </div>
             <div className="flex justify-between mt-1">
-              <span className="text-caption text-light-gray">Good</span>
-              <span className="text-caption text-light-gray">Very Poor</span>
+              <span className={`text-caption transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>Good</span>
+              <span className={`text-caption transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>Very Poor</span>
             </div>
             {current.pm25 !== undefined && (
-              <p className="text-caption text-light-gray mt-2">
-                PM2.5 — <span className="text-charcoal">{current.pm25} µg/m³</span>
+              <p className={`text-caption mt-2 transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>
+                PM2.5 — <span className={isNight ? 'text-cream' : 'text-charcoal'}>{current.pm25} µg/m³</span>
               </p>
             )}
           </div>
 
           {/* Precipitation */}
           <div className="glass-panel">
-            <p className="text-heading-small text-charcoal">Precipitation</p>
+            <p className={`text-heading-small transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>Precipitation</p>
             <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-heading-large text-charcoal font-light">{current.precipitation24h}</span>
-              <span className="text-body-small text-warm-gray">mm today</span>
+              <span className={`text-heading-large font-light transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>{current.precipitation24h}</span>
+              <span className={`text-body-small transition-colors duration-300 ${isNight ? 'text-white/70' : 'text-warm-gray'}`}>mm today</span>
             </div>
             {/* 6-day precipitation bar chart */}
             <div className="mt-4 flex items-end gap-2 h-10">
@@ -149,7 +150,7 @@ export default function DailyHighlights() {
             </div>
             <div className="flex gap-2 mt-1">
               {precipBars.map((d, i) => (
-                <span key={i} className="flex-1 text-center text-caption text-light-gray truncate">
+                <span key={i} className={`flex-1 text-center text-caption truncate transition-colors duration-300 ${isNight ? 'text-white/45' : 'text-light-gray'}`}>
                   {d.shortDay}
                 </span>
               ))}

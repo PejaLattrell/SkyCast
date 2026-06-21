@@ -48,6 +48,7 @@ export interface CurrentWeather {
   dewPoint: number;
   sunrise: string;
   sunset: string;
+  isNight: boolean;
   aqi: number;
   aqiLabel: string;
   pm25?: number;

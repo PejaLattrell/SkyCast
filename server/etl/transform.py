@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 
 # ── WMO Weather Code → (condition, conditionText) ─────────────
@@ -92,10 +93,11 @@ def _is_night(now: datetime, sunrise_iso: str | None, sunset_iso: str | None) ->
     try:
         if not sunrise_iso or not sunset_iso:
             return False
-        sunrise = datetime.fromisoformat(sunrise_iso)
-        sunset  = datetime.fromisoformat(sunset_iso)
+        sunrise = datetime.fromisoformat(sunrise_iso).replace(tzinfo=None)
+        sunset  = datetime.fromisoformat(sunset_iso).replace(tzinfo=None)
+        # Strip tzinfo so we compare naive local times (Open-Meteo returns city-local)
         local_now = now.replace(tzinfo=None)
-        return local_now < sunrise.replace(tzinfo=None) or local_now > sunset.replace(tzinfo=None)
+        return local_now < sunrise or local_now > sunset
     except Exception:
         return False
 
@@ -155,7 +157,13 @@ def transform(raw: dict, city_name: str, country: str, aq_raw: dict | None = Non
     Transform raw Open-Meteo API response into the WeatherData object
     that matches src/types/weather.ts on the frontend.
     """
-    now = datetime.now()
+    # Use the city's timezone from the API response (not the server's clock)
+    tz_str = raw.get("timezone", "UTC")
+    try:
+        city_tz = ZoneInfo(tz_str)
+    except Exception:
+        city_tz = ZoneInfo("UTC")
+    now = datetime.now(city_tz)
 
     current_raw = raw.get("current", {})
     hourly_raw  = raw.get("hourly",  {})
@@ -202,6 +210,7 @@ def transform(raw: dict, city_name: str, country: str, aq_raw: dict | None = Non
         "dewPoint":         round(_safe(current_raw.get("dewpoint_2m"))),
         "sunrise":          _fmt_time(today_sunrise),
         "sunset":           _fmt_time(today_sunset),
+        "isNight":          night,
         # Real AQI from Open-Meteo Air Quality API (European AQI scale)
         "aqi":              aqi_value,
         "aqiLabel":         aqi_label,

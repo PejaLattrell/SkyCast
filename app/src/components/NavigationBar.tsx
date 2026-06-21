@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
+import { useWeatherStore } from '@/store/useWeatherStore';
 
 const tabs = [
   { id: 'explore', label: 'Explore', path: '/' },
@@ -11,6 +12,9 @@ export default function NavigationBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+  const { weatherData } = useWeatherStore();
+
+  const isNight = currentPath === '/live' && weatherData.current.isNight;
 
   const getActiveTab = () => {
     if (currentPath === '/live') return 'live';
@@ -28,26 +32,28 @@ export default function NavigationBar() {
           {/* Logo */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer">
             <img src="/assets/logo.png" alt="SkyCast Logo" className="w-8 h-8 rounded-full object-cover shadow-soft" />
-            <span className="text-heading-small font-medium text-charcoal tracking-tight">
+            <span className={`text-heading-small font-medium tracking-tight transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>
               SkyCast
             </span>
           </button>
 
           {/* Tab Selector - Desktop */}
-          <div className="hidden md:flex items-center h-10 bg-black/[0.04] rounded-full p-1 gap-0.5">
+          <div className={`hidden md:flex items-center h-10 rounded-full p-1 gap-0.5 transition-colors duration-300 ${isNight ? 'bg-white/5' : 'bg-black/[0.04]'}`}>
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => navigate(tab.path)}
                 className="relative px-5 h-8 rounded-full text-caption transition-colors duration-200 cursor-pointer"
                 style={{
-                  color: activeTab === tab.id ? '#2C2824' : '#A09A93',
+                  color: activeTab === tab.id
+                    ? (isNight ? '#F5F0E8' : '#2C2824')
+                    : (isNight ? 'rgba(255, 255, 255, 0.4)' : '#A09A93'),
                 }}
               >
                 {activeTab === tab.id && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-cream rounded-full shadow-soft"
+                    className={`absolute inset-0 rounded-full shadow-soft transition-colors duration-300 ${isNight ? 'bg-white/10' : 'bg-cream'}`}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -70,11 +76,15 @@ export default function NavigationBar() {
               {activeTab === tab.id && (
                 <motion.div
                   layoutId="mobileActiveTab"
-                  className="absolute inset-0 bg-cream/60 rounded-xl"
+                  className={`absolute inset-0 rounded-xl transition-colors duration-300 ${isNight ? 'bg-white/10' : 'bg-cream/60'}`}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
-              <span className="relative z-10 text-xs font-medium" style={{ color: activeTab === tab.id ? '#2C2824' : '#A09A93' }}>
+              <span className="relative z-10 text-xs font-medium" style={{
+                color: activeTab === tab.id
+                  ? (isNight ? '#F5F0E8' : '#2C2824')
+                  : (isNight ? 'rgba(255, 255, 255, 0.4)' : '#A09A93')
+              }}>
                 {tab.label}
               </span>
             </button>

@@ -19,6 +19,7 @@ export const sanFranciscoWeather: WeatherData = {
     dewPoint: 14,
     sunrise: '6:42 AM',
     sunset: '5:28 PM',
+    isNight: false,
     aqi: 42,
     aqiLabel: 'Good',
     precipitation24h: 0.2,

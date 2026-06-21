@@ -51,6 +51,7 @@ export default function CurrentConditionsPanel() {
   const condition = weatherData.current.condition;
   const gradient = conditionGradients[condition] || conditionGradients['partly-cloudy'];
   const landmarkUrl = getCityLandmark(weatherData.location);
+  const isNight = weatherData.current.isNight;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,16 +90,16 @@ export default function CurrentConditionsPanel() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-light-gray">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-colors duration-300 ${isNight ? 'text-white/50' : 'text-light-gray'}`}>
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              <h1 className="text-heading-large text-charcoal">{weatherData.location}</h1>
+              <h1 className={`text-heading-large transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>{weatherData.location}</h1>
             </div>
-            <p className="text-body-regular text-light-gray mt-1 ml-[18px]">{weatherData.date}</p>
+            <p className={`text-body-regular mt-1 ml-[18px] transition-colors duration-300 ${isNight ? 'text-white/60' : 'text-light-gray'}`}>{weatherData.date}</p>
           </div>
 
-          {/* Search Bar - starts in the middle of stats (matches Column 2 + Column 3 width) and extends to the right */}
+          {/* Search Bar */}
           <form onSubmit={handleSearch} className="relative flex items-center w-full lg:w-[30%]">
             <input
               id="live-city-search"
@@ -106,7 +107,11 @@ export default function CurrentConditionsPanel() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search a city…"
-              className="w-full h-10 pl-5 pr-11 rounded-full bg-white/30 backdrop-blur-xl border border-white/20 text-charcoal placeholder-light-gray text-body-regular outline-none focus:ring-2 focus:ring-white/40 transition-all shadow-soft"
+              className={`w-full h-10 pl-5 pr-11 rounded-full backdrop-blur-xl border text-body-regular outline-none focus:ring-2 focus:ring-white/40 transition-all shadow-soft ${
+                isNight
+                  ? 'border-white/10 text-cream placeholder-white/40 bg-white/10'
+                  : 'border-white/20 text-charcoal placeholder-light-gray bg-white/30'
+              }`}
             />
             <svg
               width="16"
@@ -115,7 +120,7 @@ export default function CurrentConditionsPanel() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="absolute right-4 text-light-gray pointer-events-none"
+              className={`absolute right-4 pointer-events-none transition-colors duration-300 ${isNight ? 'text-white/50' : 'text-light-gray'}`}
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -133,10 +138,10 @@ export default function CurrentConditionsPanel() {
             <div className="mt-4">
               <TemperatureDisplay value={weatherData.current.temp} size="large" />
             </div>
-            <p className="text-heading-medium text-charcoal mt-2">
+            <p className={`text-heading-medium mt-2 transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>
               {weatherData.current.conditionText}
             </p>
-            <p className="text-body-regular text-warm-gray mt-1">
+            <p className={`text-body-regular mt-1 transition-colors duration-300 ${isNight ? 'text-white/70' : 'text-warm-gray'}`}>
               Feels like {weatherData.current.feelsLike}°
             </p>
           </div>
@@ -149,8 +154,8 @@ export default function CurrentConditionsPanel() {
                 className="glass-panel p-5 hover:shadow-card hover:border-white/[0.35] transition-all duration-300"
               >
                 <span className="text-lg">{card.icon}</span>
-                <p className="text-caption text-light-gray mt-2">{card.label}</p>
-                <p className="text-heading-small text-charcoal mt-1">{card.value(weatherData)}</p>
+                <p className={`text-caption mt-2 transition-colors duration-300 ${isNight ? 'text-white/50' : 'text-light-gray'}`}>{card.label}</p>
+                <p className={`text-heading-small mt-1 transition-colors duration-300 ${isNight ? 'text-cream' : 'text-charcoal'}`}>{card.value(weatherData)}</p>
               </div>
             ))}
           </div>

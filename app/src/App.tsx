@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Explore from '@/pages/Explore';
 import LiveWeather from '@/pages/LiveWeather';
 import Forecast from '@/pages/Forecast';
+import { useWeatherStore } from '@/store/useWeatherStore';
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -28,9 +29,12 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const location = useLocation();
+  const { weatherData } = useWeatherStore();
+  
+  const isNight = location.pathname === '/live' && weatherData.current.isNight;
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className={`min-h-screen transition-colors duration-500 ${isNight ? 'bg-[#1A1828]' : 'bg-cream'}`}>
       <NavigationBar />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

@@ -3,6 +3,7 @@ import { useWeatherStore } from '@/store/useWeatherStore';
 export default function SevereWeatherAlert() {
   const { weatherData } = useWeatherStore();
   const alert = weatherData.current.alert;
+  const isNight = weatherData.current.isNight;
 
   if (!alert) return null;
 
@@ -18,7 +19,7 @@ export default function SevereWeatherAlert() {
             </svg>
             <div>
               <p className="text-heading-small text-amber">{alert.title}</p>
-              <p className="text-body-regular text-charcoal mt-1">{alert.description}</p>
+              <p className={`text-body-regular mt-1 transition-colors duration-300 ${isNight ? 'text-white/80' : 'text-charcoal'}`}>{alert.description}</p>
               <span className="text-body-small text-amber underline mt-2 inline-block">View details</span>
             </div>
           </div>
